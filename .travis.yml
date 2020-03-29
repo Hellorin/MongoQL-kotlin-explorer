@@ -3,5 +3,8 @@ language: java
 before_install:
   - "cp .travis.settings.xml $HOME/.m2/settings.xml"
 
+install:
+  - "mvn clean install -Pno-generation"
+
 script:
   - "mvn test"

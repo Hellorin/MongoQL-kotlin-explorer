@@ -18,7 +18,18 @@
     <properties>
         <java.version>1.8</java.version>
         <kotlin.version>1.2.71</kotlin.version>
+
+        <generation-skipped>false</generation-skipped>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>no-generation</id>
+            <properties>
+                <generation-skipped>true</generation-skipped>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -103,11 +114,12 @@
             <plugin>
                 <groupId>io.github.hellorin.mongoql</groupId>
                 <artifactId>mongoql-springboot-maven-plugin</artifactId>
-                <version>1.0.2</version>
+                <version>1.0.3</version>
                 <configuration>
                     <packageName>ch.hellorin.graphqlmongoexplorer</packageName>
                     <databaseName>myDatabase</databaseName>
                     <collectionName>myCollection</collectionName>
+                    <skip>${generation-skipped}</skip>
                 </configuration>
                 <executions>
                     <execution>

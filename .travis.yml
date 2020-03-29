@@ -5,6 +5,3 @@ before_install:
 
 install:
   - "mvn clean install -Pno-generation"
-
-script:
-  - "mvn test"

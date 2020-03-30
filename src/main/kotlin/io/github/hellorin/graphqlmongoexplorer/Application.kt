@@ -1,4 +1,4 @@
-package ch.hellorin.graphqlmongoexplorer
+package io.github.hellorin.graphqlmongoexplorer
 
 import org.springframework.boot.runApplication
 

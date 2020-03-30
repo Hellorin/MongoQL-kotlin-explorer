@@ -18,6 +18,7 @@
     <properties>
         <java.version>1.8</java.version>
         <kotlin.version>1.2.71</kotlin.version>
+        <mongoql-springboot-maven-plugin.version>1.1.0</mongoql-springboot-maven-plugin.version>
 
         <generation-skipped>false</generation-skipped>
     </properties>
@@ -29,13 +30,31 @@
                 <generation-skipped>true</generation-skipped>
             </properties>
         </profile>
+
+        <!-- Required to download artifact from github -->
+        <profile>
+            <id>github</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>github-mongoql-springboot-maven-plugin</id>
+                    <name>Github OWNER Apache Maven Packages</name>
+                    <url>https://maven.pkg.github.com/HELLORIN/MONGOQL-SPRINGBOOT-MAVEN-PLUGIN</url>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>github-mongoql-springboot-maven-plugin</id>
+                    <name>Github OWNER Apache Maven Packages</name>
+                    <url>https://maven.pkg.github.com/HELLORIN/MONGOQL-SPRINGBOOT-MAVEN-PLUGIN</url>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
     </profiles>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-reflect</artifactId>
@@ -45,25 +64,12 @@
             <artifactId>kotlin-stdlib-jdk8</artifactId>
         </dependency>
 
+        <!-- Used to gather all dependencies required to run springboot and graphql -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.graphql-java</groupId>
-            <artifactId>graphql-spring-boot-starter</artifactId>
-            <version>5.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.graphql-java</groupId>
-            <artifactId>graphiql-spring-boot-starter</artifactId>
-            <version>5.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.graphql-java</groupId>
-            <artifactId>graphql-java-tools</artifactId>
-            <version>5.2.4</version>
+            <groupId>io.github.hellorin.mongoql</groupId>
+            <artifactId>mongoql-springboot-maven-plugin</artifactId>
+            <version>${mongoql-springboot-maven-plugin.version}</version>
+            <classifier>jar-with-dependencies</classifier>
         </dependency>
     </dependencies>
 
@@ -93,30 +99,14 @@
                     </dependency>
                 </dependencies>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>generated-sources/src/main/kotlin</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+
+            <!-- 1. Generate MongoQL sources-->
             <plugin>
                 <groupId>io.github.hellorin.mongoql</groupId>
                 <artifactId>mongoql-springboot-maven-plugin</artifactId>
-                <version>1.0.3</version>
+                <version>${mongoql-springboot-maven-plugin.version}</version>
                 <configuration>
-                    <packageName>ch.hellorin.graphqlmongoexplorer</packageName>
+                    <packageName>io.github.hellorin.graphqlmongoexplorer</packageName>
                     <databaseName>myDatabase</databaseName>
                     <collectionName>myCollection</collectionName>
                     <skip>${generation-skipped}</skip>
@@ -131,6 +121,28 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- 2. Copy MongoQL generated sources -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>target/generated-sources/src/main/kotlin</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 3. Copy MongoQL generated resources -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -146,7 +158,7 @@
                             <outputDirectory>${project.build.outputDirectory}</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.basedir}/generated-resources</directory>
+                                    <directory>${project.basedir}/target/generated-resources</directory>
                                 </resource>
                             </resources>
                         </configuration>

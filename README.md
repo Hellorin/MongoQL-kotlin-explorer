@@ -4,6 +4,11 @@
 ## Purpose
 Show usage of the MongoQL-springboot-maven-plugin to be able to easily explore MongoQL data through a GraphQL interface
 
+## Deployed on Heroku
+If you don't want to go through all the trouble of setting things up, you can see the result deployed on the Heroku plateform using a Mongo Atlas database:
+
+**[HERE](https://mongoql-kotlin-explorer.herokuapp.com/graphiql)**
+
 ## How to use (MongoDB Atlas)
 Please refer to [MongoQL-core readme](https://github.com/Hellorin/MongoQL-core) for the initial setup of MongoDB data.
 
@@ -43,9 +48,6 @@ The result should then be:
   }
 }
 ```
-
-## Deployed on Heroku
-If you don't want to go through all the trouble of setting things up, you can see the result running at [this link](https://mongoql-kotlin-explorer.herokuapp.com/graphiql), deployed on the Heroku plateform using a Mongo Atlas database.
 
 ## Technologies
 - Kotlin
